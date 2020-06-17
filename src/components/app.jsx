@@ -1,60 +1,64 @@
 import React, { Component } from 'react';
+import '../App.css';
+import List from './List.jsx';
+import Logo from "../little-bird.png";
+
 
 
 class App extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            name:"",
-            hasLoaded:false
+            name: "",
+            items: [
+                { value: "I am the first chirp", id: 0 },
+                { value: "I am the second chirp", id: 1 },
+                { value: "I am the third chirp", id: 2 }
+            ]
         }
+
+        
     }
 
     handleInputChange = (value) => {
-        this.setState({name: value});
+        this.setState({ name: value });
     }
 
-    checkIfLoaded = () => {
-        if(this.state.hasLoaded === false){
-            this.setState({hasLoaded:true});
-            
-        } else {
-            
-            this.setState({hasLoaded:false});
-        }
-    }
-    
-    componentDidMount = () => {
-        this.setState({hasLoaded:true});
+
+    addChirp = () => {
+        let index = this.state.items.length;
+        this.state.items.push( {value: this.state.name, id: index} );
+        // let newArray = this.state.items;
+        this.setState({items: this.state.items});
+        this.setState({name:""});
     }
 
     render() {
-        if(this.state.hasLoaded){
-            return (
-                <div>
-                    <input 
-                    placeholder="What's your name?"
-                    value={ this.state.name }
-                    onChange={ (event) => this.handleInputChange(event.target.value) }
-                    />
-                    <button onClick = {this.checkIfLoaded}>
-                        click if loaded!
-                    </button>
-                    <h1>{this.props.text}</h1>
-                    <h1>{this.state.name}</h1>
+
+        return (
+
+            <div>
+                <nav className="navbar navbar-dark bg-primary justify-content-between">
+                    <a className="navbar-brand navbar-primary" href="http://localhost:3000/" >
+                        <img src={Logo} width="30" height="30" className="d-inline-block align-top" alt="" />
+                    Chirper
+                    </a>
+                    <div>
+                        <input
+                            placeholder="type your chirp"
+                            value={this.state.name}
+                            onChange={(event) => this.handleInputChange(event.target.value)}
+                        />
+                        <button className="btn btn-success btn-sm" type="button" onClick={this.addChirp}>Add Chirp</button>
+                    </div>
+
+                </nav>
+                <div className="container">
+                    <List items={this.state.items} />
                 </div>
-            );
-        } else {
-            return (
-                <div>
-                    <h1>Still Loading.....</h1>
-                    <button onClick = {this.checkIfLoaded}>
-                    Click if not loaded!
-                    </button>
-                </div> 
-            );
-        } 
+            </div>
+        );
     }
 }
 
